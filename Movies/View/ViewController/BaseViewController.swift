@@ -8,7 +8,15 @@
 
 import UIKit
 
-class BaseViewController: UIViewController {
+//class BaseViewController: UIViewController {
+//    
+//    static var storyboard: UIStoryboard {
+//        return UIStoryboard(name: "Main", bundle: nil)
+//    }
+//    
+//}
+
+extension UIViewController {
     
     static var storyboard: UIStoryboard {
         return UIStoryboard(name: "Main", bundle: nil)

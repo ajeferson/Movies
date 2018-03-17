@@ -17,6 +17,8 @@
 		28382066205CAAE700058682 /* FetchableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28382065205CAAE700058682 /* FetchableImage.swift */; };
 		28382068205CBF2C00058682 /* MovieListCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28382067205CBF2C00058682 /* MovieListCellViewModel.swift */; };
 		2838206B205CC5E000058682 /* PosterSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2838206A205CC5E000058682 /* PosterSize.swift */; };
+		2838206F205CDD3A00058682 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2838206E205CDD3A00058682 /* MovieDetailViewController.swift */; };
+		28382071205CDD4B00058682 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28382070205CDD4B00058682 /* MovieDetailViewModel.swift */; };
 		28650CA0205C670100752EF4 /* MovieListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28650C9F205C670100752EF4 /* MovieListViewController.swift */; };
 		28650CA2205C674100752EF4 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28650CA1205C674100752EF4 /* BaseViewController.swift */; };
 		28650CA6205C67FB00752EF4 /* Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28650CA5205C67FB00752EF4 /* Identifiable.swift */; };
@@ -68,6 +70,8 @@
 		28382065205CAAE700058682 /* FetchableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchableImage.swift; sourceTree = "<group>"; };
 		28382067205CBF2C00058682 /* MovieListCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListCellViewModel.swift; sourceTree = "<group>"; };
 		2838206A205CC5E000058682 /* PosterSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterSize.swift; sourceTree = "<group>"; };
+		2838206E205CDD3A00058682 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
+		28382070205CDD4B00058682 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 		28650C9F205C670100752EF4 /* MovieListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListViewController.swift; sourceTree = "<group>"; };
 		28650CA1205C674100752EF4 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		28650CA5205C67FB00752EF4 /* Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiable.swift; sourceTree = "<group>"; };
@@ -213,6 +217,7 @@
 			children = (
 				28650CA7205C688900752EF4 /* MovieListViewModel.swift */,
 				28382067205CBF2C00058682 /* MovieListCellViewModel.swift */,
+				28382070205CDD4B00058682 /* MovieDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -240,6 +245,7 @@
 			children = (
 				28650C9F205C670100752EF4 /* MovieListViewController.swift */,
 				28650CA1205C674100752EF4 /* BaseViewController.swift */,
+				2838206E205CDD3A00058682 /* MovieDetailViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -616,8 +622,10 @@
 				28650CBE205C9BE200752EF4 /* MovieListCollectionViewCell.swift in Sources */,
 				2838206B205CC5E000058682 /* PosterSize.swift in Sources */,
 				2812C8CB205C62BE008101B6 /* AppDelegate.swift in Sources */,
+				2838206F205CDD3A00058682 /* MovieDetailViewController.swift in Sources */,
 				28650CA8205C688900752EF4 /* MovieListViewModel.swift in Sources */,
 				28650CB8205C783700752EF4 /* AppError.swift in Sources */,
+				28382071205CDD4B00058682 /* MovieDetailViewModel.swift in Sources */,
 				28650CBC205C930E00752EF4 /* Movies.swift in Sources */,
 				28650CAE205C738000752EF4 /* Movie.swift in Sources */,
 				28650CAA205C68B500752EF4 /* MovieService.swift in Sources */,

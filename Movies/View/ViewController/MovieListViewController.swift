@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class MovieListViewController: BaseViewController, Identifiable {
+class MovieListViewController: UIViewController, Identifiable {
     
     static var identifier: String = "MovieListViewController"
     
@@ -74,6 +74,7 @@ class MovieListViewController: BaseViewController, Identifiable {
     }
     
     private func subscribeToCollectionViewWillEvents() {
+        
         collectionView
             .rx
             .willDisplayCell
@@ -82,6 +83,15 @@ class MovieListViewController: BaseViewController, Identifiable {
                 self?.willDisplayCell(at: indexPath)
             })
             .disposed(by: disposeBag)
+        
+        collectionView
+        .rx
+        .modelSelected(MovieListCellViewModel.self)
+            .subscribe(onNext: { cellViewModel in
+                self.didSelectMovie()
+            })
+        .disposed(by: disposeBag)
+        
     }
     
     
@@ -96,6 +106,21 @@ class MovieListViewController: BaseViewController, Identifiable {
         if indexPath.row == viewModel.moviesCount - bottomOffset && !viewModel.isFetchingMovies && !viewModel.isDone {
             viewModel.fetchMovies()
         }
+    }
+    
+    private func didSelectMovie() {
+        
+        // Get the selected index path
+        guard let indexes = collectionView.indexPathsForSelectedItems,
+            let indexPath = indexes.first else {
+            return
+        }
+        
+        // Open the details view controller
+        let detailsViewModel = viewModel.getMovieDetailViewModel(at: indexPath.row)
+        let viewController = MovieDetailViewController.newInstance(viewModel: detailsViewModel) // View creates View
+        navigationController?.pushViewController(viewController, animated: true)
+        
     }
     
 }

@@ -22,6 +22,7 @@ class MovieListViewModel {
     var currentPage = 1
     let pageSize = 20
     
+    var movies = [Movie]()
     var viewModelCells: Variable<[MovieListCellViewModel]> = Variable([])
     
     var moviesCount: Int {
@@ -58,9 +59,15 @@ class MovieListViewModel {
         
     }
     
+    // ViewModel creates ViewModel
+    func getMovieDetailViewModel(at index: Int) -> MovieDetailViewModel {
+        return MovieDetailViewModel(movie: movies[index], movieService: movieService)
+    }
+    
     private func process(movies: [Movie]) {
         currentPage += 1
         isDone = movies.count < pageSize
+        self.movies.append(contentsOf: movies)
         viewModelCells.value.append(contentsOf: movies.map { MovieListCellViewModel(movie: $0, movieService: movieService) })
     }
     
