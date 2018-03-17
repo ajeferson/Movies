@@ -36,6 +36,16 @@ enum MoviePath: String {
     
 }
 
+enum GenrePath: String {
+    
+    case movie = "/genre/movie/list"
+    
+    var fullUrl: String {
+        return "\(Urls.basePath.rawValue)\(rawValue)"
+    }
+    
+}
+
 protocol Sizeable{
     var size: String { get }
 }

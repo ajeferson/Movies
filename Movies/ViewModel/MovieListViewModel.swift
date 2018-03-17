@@ -12,6 +12,7 @@ import RxSwift
 class MovieListViewModel {
     
     let movieService: MovieServiceProtocol
+    let genreService: GenreService
     
     let ioScheduler: Scheduler
     let uiScheduler: Scheduler
@@ -35,8 +36,9 @@ class MovieListViewModel {
     
     var isDone = false
     
-    init(movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+    init(movieService: MovieServiceProtocol, genreService: GenreService, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movieService = movieService
+        self.genreService = genreService
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler
     }
@@ -45,8 +47,9 @@ class MovieListViewModel {
         
         isLoading.value = viewModelCells.value.isEmpty
         
-        movieService
-            .upcomingMovies(at: currentPage)
+        genreService
+            .fetchGenres()
+            .flatMap { [movieService, currentPage] _ in movieService.upcomingMovies(at: currentPage) }
             .subscribeOn(ioScheduler)
             .observeOn(uiScheduler)
             .subscribe(onSuccess: { [weak self] movies in
@@ -61,22 +64,32 @@ class MovieListViewModel {
     
     // ViewModel creates ViewModel
     func getMovieDetailViewModel(at index: Int) -> MovieDetailViewModel {
-        return MovieDetailViewModel(movie: movies[index], movieService: movieService)
+        return MovieDetailViewModel(movie: movies[index], genres: genresOf(movie: movies[index]), movieService: movieService)
     }
     
     func getMoviewDetailViewModel(`for` movie: Movie) -> MovieDetailViewModel {
-        return MovieDetailViewModel(movie: movie, movieService: movieService)
+        return MovieDetailViewModel(movie: movie, genres: genresOf(movie: movie), movieService: movieService)
     }
     
     func getSearchResultsViewModel() -> SearchResultsViewModel {
         return SearchResultsViewModel(movieService: movieService)
     }
     
+    private func genresOf(movie: Movie) -> [Genre]? {
+        return genreService.genresOf(movie: movie)
+    }
+    
     private func process(movies: [Movie]) {
         currentPage += 1
         isDone = movies.count < pageSize
         self.movies.append(contentsOf: movies)
-        viewModelCells.value.append(contentsOf: movies.map { MovieListCellViewModel(movie: $0, movieService: movieService) })
+        
+        let cells = movies.map { [weak self] movie -> MovieListCellViewModel in
+            return MovieListCellViewModel(movie: movie, genres: self?.genresOf(movie: movie), movieService: movieService)
+        }
+        
+        viewModelCells.value.append(contentsOf: cells)
+        
     }
     
 }

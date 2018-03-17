@@ -24,7 +24,7 @@ class MovieListCollectionViewCell: UICollectionViewCell, Identifiable {
             labelTitle.text = viewModel?.title
             disposeBag = DisposeBag() // Dispose previous disposables
             bindToIsLoading()
-            subscribeToPosterImage()
+            subscribeToPosterImgit age()
         }
     }
     

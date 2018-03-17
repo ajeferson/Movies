@@ -12,6 +12,8 @@ import RxSwift
 class MovieDetailViewModel {
     
     private let movie: Movie
+    private let genres: [Genre]
+    
     let movieService: MovieServiceProtocol
     
     let backdrop: Variable<UIImage?> = Variable(nil)
@@ -28,8 +30,9 @@ class MovieDetailViewModel {
     let releaseDateStr: String
     
     
-    init(movie: Movie, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+    init(movie: Movie, genres: [Genre]?, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movie = movie
+        self.genres = genres ?? [Genre]()
         self.movieService = movieService
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler

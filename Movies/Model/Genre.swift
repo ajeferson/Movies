@@ -1,5 +1,5 @@
 //
-//  PosterSize.swift
+//  Genre.swift
 //  Movies
 //
 //  Created by Alan Jeferson on 17/03/2018.
@@ -8,4 +8,9 @@
 
 import Foundation
 
-
+struct Genre: Codable {
+    
+    let id: Int
+    let name: String
+    
+}

@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Setup initial View and ViewModel
         // The ViewController is considered the actual view on MVVM
-        let viewModel = MovieListViewModel(movieService: MovieService())
+        let viewModel = MovieListViewModel(movieService: MovieService(), genreService: GenreService.shared)
         let viewController = MovieListViewController.newInstance(viewModel: viewModel)
         let nav = UINavigationController(rootViewController: viewController)
         

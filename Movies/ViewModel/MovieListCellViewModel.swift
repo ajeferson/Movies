@@ -15,6 +15,7 @@ class MovieListCellViewModel {
     let releaseDateStr: String
     let posterPath: String?
     let backdropPath: String?
+    let genres: [Genre]
     
     let movieService: MovieServiceProtocol
     
@@ -27,11 +28,12 @@ class MovieListCellViewModel {
     let ioScheduler: Scheduler
     let uiScheduler: Scheduler
     
-    init(movie: Movie, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+    init(movie: Movie, genres: [Genre]?, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         title = movie.title
         releaseDateStr = movie.releaseDateStr
         posterPath = movie.posterPath
         backdropPath = movie.backdropPath
+        self.genres = genres ?? [Genre]()
         self.movieService = movieService
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler

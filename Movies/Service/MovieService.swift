@@ -10,7 +10,9 @@ import Foundation
 import Alamofire
 import RxSwift
 
-struct MovieService: MovieServiceProtocol {
+struct MovieService: BaseServiceProtocol, MovieServiceProtocol {
+    
+    typealias Model = MovieResults
     
     func imageUrl(for path: String, with size: Sizeable) -> String {
         return "\(Urls.imagePath.rawValue)/\(size.size)\(path)"
@@ -19,39 +21,12 @@ struct MovieService: MovieServiceProtocol {
     
     func fetchMovies(atPath path: MoviePath, onPage page: Int, withParams params: Parameters = [:]) -> Single<[Movie]> {
         
-        // Assembling custom parameters
         var parameters = Parameters()
         params.forEach { parameters[$0] = $1 }
-        
-        parameters["api_key"] = Auth.apiKey.rawValue
         parameters["page"] = page
-        parameters["language"] = "en-US" // TODO
         
-        return Single.create { single -> Disposable in
-            
-            let request = Alamofire.request(path.fullUrl,
-                              method: .get,
-                              parameters: parameters,
-                              encoding: URLEncoding.default,
-                              headers: nil)
-                .responseData(completionHandler: { response in
-                    
-                    switch response.result {
-                    case .success(let value):
-                        guard let movies = Movie.from(data: value) else {
-                            single(.error(AppError.decode))
-                            return
-                        }
-                        single(.success(movies))
-                    case .failure:
-                        single(.error(response.isNetworkError ? AppError.network : AppError.unknown))
-                    }
-                    
-                })
-            
-            return Disposables.create { request.cancel() }
-            
-        }
+        return fetchModel(url: path.fullUrl, withParams: parameters)
+            .map { $0.results ?? [Movie]() }
         
     }
     
