@@ -17,12 +17,12 @@ class MovieService: MovieServiceProtocol {
     let apiKey = "1f54bd990f1cdfb230adb312546d765d"
     
     // TODO use func
-    func upcomingMoviesUrl: String {
+    func upcomingMoviesUrl() -> String {
         return "\(basePath)/movie/upcoming"
     }
     
-    func imageUrl(for path: String) -> String {
-        return "\(imagePath)/w185\(path)"
+    func imageUrl(for path: String, with size: Sizeable) -> String {
+        return "\(imagePath)/\(size.size)\(path)"
     }
     
     func upcomingMovies(at page: Int) -> Single<[Movie]> {
@@ -73,9 +73,9 @@ class MovieService: MovieServiceProtocol {
         
     }
     
-    func fetchImage(at path: String) -> Single<Data> {
+    func fetchImage(of size: Sizeable, at path: String) -> Single<Data> {
         
-        return Single.create { [url = imageUrl(for: path) ]single in
+        return Single.create { [url = imageUrl(for: path, with: size) ]single in
             
             Alamofire
                 .request(url)

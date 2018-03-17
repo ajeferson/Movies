@@ -48,7 +48,7 @@ class MovieListCellViewModel {
         isLoading.value = true
         
         movieService
-            .fetchImage(at: path)
+            .fetchImage(of: PosterSize.w500, at: path)
             .subscribeOn(ioScheduler)
             .observeOn(uiScheduler)
             .subscribe(onSuccess: { [weak self] data in

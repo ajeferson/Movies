@@ -20,7 +20,19 @@ class MovieListViewModel {
     var isLoading = Variable(false)
     
     var currentPage = 1
+    let pageSize = 20
+    
     var viewModelCells: Variable<[MovieListCellViewModel]> = Variable([])
+    
+    var moviesCount: Int {
+        return viewModelCells.value.count
+    }
+    
+    var isFetchingMovies: Bool {
+        return isLoading.value
+    }
+    
+    var isDone = false
     
     init(movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movieService = movieService
@@ -30,7 +42,7 @@ class MovieListViewModel {
     
     func fetchMovies() {
         
-        isLoading.value = true
+        isLoading.value = viewModelCells.value.isEmpty
         
         movieService
             .upcomingMovies(at: currentPage)
@@ -47,7 +59,9 @@ class MovieListViewModel {
     }
     
     private func process(movies: [Movie]) {
-        viewModelCells.value = movies.map { MovieListCellViewModel(movie: $0, movieService: movieService) }
+        currentPage += 1
+        isDone = movies.count < pageSize
+        viewModelCells.value.append(contentsOf: movies.map { MovieListCellViewModel(movie: $0, movieService: movieService) })
     }
     
 }

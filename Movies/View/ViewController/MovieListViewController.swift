@@ -17,6 +17,9 @@ class MovieListViewController: BaseViewController, Identifiable {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    // How many cells from the bottom to fetch more
+    let bottomOffset = 6
+    
     let disposeBag = DisposeBag()
     var viewModel: MovieListViewModel!
     
@@ -26,16 +29,18 @@ class MovieListViewController: BaseViewController, Identifiable {
         return instance
     }
     
+    
+    //MARK:- Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         subscribe()
+        subscribeToCollectionViewWillEvents()
         viewModel.fetchMovies()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    
+    //MARK:- Rx
     
     // Bind view model attributes to UI controls and make subscriptions
     private func subscribe() {
@@ -68,13 +73,35 @@ class MovieListViewController: BaseViewController, Identifiable {
             .disposed(by: disposeBag)
     }
     
+    private func subscribeToCollectionViewWillEvents() {
+        collectionView
+            .rx
+            .willDisplayCell
+            .subscribe(onNext: { [weak self] cellInfo in
+                let (_, indexPath) = cellInfo
+                self?.willDisplayCell(at: indexPath)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    
+    //MARK:- Rx hooks
+    
     private func loadingStateChange(to isLoading: Bool) {
         activityIndicator.isVisible = isLoading
         collectionView.isHidden = isLoading
     }
     
+    private func willDisplayCell(at indexPath: IndexPath) {
+        if indexPath.row == viewModel.moviesCount - bottomOffset && !viewModel.isFetchingMovies && !viewModel.isDone {
+            viewModel.fetchMovies()
+        }
+    }
+    
 }
 
+
+//MARK:- CollectionView Layout
 extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
