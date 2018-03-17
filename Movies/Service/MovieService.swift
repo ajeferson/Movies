@@ -12,37 +12,26 @@ import RxSwift
 
 struct MovieService: MovieServiceProtocol {
     
-    let basePath = "https://api.themoviedb.org/3"
-    let imagePath = "https://image.tmdb.org/t/p"
-    let apiKey = "1f54bd990f1cdfb230adb312546d765d"
-    
-    func upcomingMoviesUrl() -> String {
-        return "\(basePath)/movie/upcoming"
-    }
-    
     func imageUrl(for path: String, with size: Sizeable) -> String {
-        return "\(imagePath)/\(size.size)\(path)"
+        return "\(Urls.imagePath.rawValue)/\(size.size)\(path)"
     }
     
-    func upcomingMovies(at page: Int) -> Single<[Movie]> {
+    
+    func fetchMovies(atPath path: MoviePath, onPage page: Int, withParams params: Parameters = [:]) -> Single<[Movie]> {
         
-        if !Connectivity.isConnected {
-            return Single.error(AppError.network)
-        }
+        // Assembling custom parameters
+        var parameters = Parameters()
+        params.forEach { parameters[$0] = $1 }
         
-        // TODO Language
+        parameters["api_key"] = Auth.apiKey.rawValue
+        parameters["page"] = page
+        parameters["language"] = "en-US" // TODO
         
-        let params: Parameters = [
-            "api_key": apiKey,
-            "page": page,
-            "language": "en"
-        ]
-        
-        return Single.create { [url = upcomingMoviesUrl()] single -> Disposable in
+        return Single.create { single -> Disposable in
             
-            Alamofire.request(url,
+            let request = Alamofire.request(path.fullUrl,
                               method: .get,
-                              parameters: params,
+                              parameters: parameters,
                               encoding: URLEncoding.default,
                               headers: nil)
                 .responseData(completionHandler: { response in
@@ -60,10 +49,18 @@ struct MovieService: MovieServiceProtocol {
                     
                 })
             
-            return Disposables.create()
+            return Disposables.create { request.cancel() }
             
         }
         
+    }
+    
+    func upcomingMovies(at page: Int) -> Single<[Movie]> {
+        return fetchMovies(atPath: .upcoming, onPage: page)
+    }
+    
+    func searchMovies(with query: String, at page: Int) -> Single<[Movie]> {
+        return fetchMovies(atPath: .search, onPage: page, withParams: ["query": query])
     }
     
     func fetchImage(of size: Sizeable, at path: String) -> Single<Data> {

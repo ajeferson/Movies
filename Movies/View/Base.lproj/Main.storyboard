@@ -92,6 +92,67 @@
             </objects>
             <point key="canvasLocation" x="711.20000000000005" y="68.815592203898049"/>
         </scene>
+        <!--Search Results View Controller-->
+        <scene sceneID="8A0-ZG-QL6">
+            <objects>
+                <viewController storyboardIdentifier="SearchResultsViewController" id="Qa4-N1-QW4" customClass="SearchResultsViewController" customModule="Movies" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="M5D-ve-9Xy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Qfn-NF-dW0">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchResultsTableViewCell" id="L6K-cN-x8i" customClass="SearchResultsTableViewCell" customModule="Movies" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L6K-cN-x8i" id="I5P-gn-OGW">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x3c-uT-4EI">
+                                                    <rect key="frame" x="166" y="11" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="x3c-uT-4EI" firstAttribute="centerX" secondItem="I5P-gn-OGW" secondAttribute="centerX" id="THH-wK-yd3"/>
+                                                <constraint firstItem="x3c-uT-4EI" firstAttribute="centerY" secondItem="I5P-gn-OGW" secondAttribute="centerY" id="lD6-X0-lbx"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="labelTitle" destination="x3c-uT-4EI" id="6nk-bI-1Ra"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="yqP-3z-sOA">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Jre-2l-2Cm" firstAttribute="bottom" secondItem="Qfn-NF-dW0" secondAttribute="bottom" id="0dQ-hV-p4u"/>
+                            <constraint firstItem="Jre-2l-2Cm" firstAttribute="trailing" secondItem="Qfn-NF-dW0" secondAttribute="trailing" id="5HU-eT-W6h"/>
+                            <constraint firstItem="yqP-3z-sOA" firstAttribute="centerX" secondItem="M5D-ve-9Xy" secondAttribute="centerX" id="5su-2J-KWn"/>
+                            <constraint firstItem="yqP-3z-sOA" firstAttribute="centerY" secondItem="M5D-ve-9Xy" secondAttribute="centerY" id="7JT-Ck-D6M"/>
+                            <constraint firstItem="Qfn-NF-dW0" firstAttribute="leading" secondItem="Jre-2l-2Cm" secondAttribute="leading" id="TZV-YU-jsq"/>
+                            <constraint firstItem="Qfn-NF-dW0" firstAttribute="top" secondItem="Jre-2l-2Cm" secondAttribute="top" id="bgA-Sl-LjU"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Jre-2l-2Cm"/>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="yqP-3z-sOA" id="590-sE-MWq"/>
+                        <outlet property="tableView" destination="Qfn-NF-dW0" id="88b-YT-mNp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SGa-ZC-9xl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1463" y="640"/>
+        </scene>
         <!--Movie Detail View Controller-->
         <scene sceneID="Dre-Rt-0IS">
             <objects>

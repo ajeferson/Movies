@@ -21,11 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func setupInitialViewController() {
         
+        // Setup initial View and ViewModel
+        // The ViewController is considered the actual view on MVVM
         let viewModel = MovieListViewModel(movieService: MovieService())
         let viewController = MovieListViewController.newInstance(viewModel: viewModel)
         let nav = UINavigationController(rootViewController: viewController)
         
         nav.navigationBar.prefersLargeTitles = true
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = nav
         window?.makeKeyAndVisible()

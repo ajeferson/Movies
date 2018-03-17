@@ -64,6 +64,14 @@ class MovieListViewModel {
         return MovieDetailViewModel(movie: movies[index], movieService: movieService)
     }
     
+    func getMoviewDetailViewModel(`for` movie: Movie) -> MovieDetailViewModel {
+        return MovieDetailViewModel(movie: movie, movieService: movieService)
+    }
+    
+    func getSearchResultsViewModel() -> SearchResultsViewModel {
+        return SearchResultsViewModel(movieService: movieService)
+    }
+    
     private func process(movies: [Movie]) {
         currentPage += 1
         isDone = movies.count < pageSize
