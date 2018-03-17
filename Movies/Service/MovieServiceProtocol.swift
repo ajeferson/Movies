@@ -13,4 +13,6 @@ protocol MovieServiceProtocol {
     
     func upcomingMovies(at page: Int) -> Single<[Movie]>
     
+    func fetchImage(at path: String) -> Single<Data>
+    
 }

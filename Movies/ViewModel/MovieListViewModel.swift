@@ -13,8 +13,8 @@ class MovieListViewModel {
     
     let movieService: MovieServiceProtocol
     
-    let ioScheduler: ImmediateSchedulerType
-    let uiScheduler: ImmediateSchedulerType
+    let ioScheduler: Scheduler
+    let uiScheduler: Scheduler
     
     var disposeBag = DisposeBag()
     var isLoading = Variable(false)
@@ -22,7 +22,7 @@ class MovieListViewModel {
     var currentPage = 1
     var viewModelCells: Variable<[MovieListCellViewModel]> = Variable([])
     
-    init(movieService: MovieServiceProtocol, ioScheduler: ImmediateSchedulerType = Schedulers.io, uiScheduler: ImmediateSchedulerType = Schedulers.main) {
+    init(movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movieService = movieService
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler
@@ -47,24 +47,7 @@ class MovieListViewModel {
     }
     
     private func process(movies: [Movie]) {
-        viewModelCells.value = movies.map { MovieListCellViewModel(movie: $0) }
+        viewModelCells.value = movies.map { MovieListCellViewModel(movie: $0, movieService: movieService) }
     }
-    
-    struct MovieListCellViewModel {
-        
-        let title: String
-        let releaseDateStr: String
-        let posterPath: String?
-        let backdropPath: String?
-        
-        init(movie: Movie) {
-            title = movie.title
-            releaseDateStr = movie.releaseDateStr
-            posterPath = movie.posterPath
-            backdropPath = movie.backdropPath
-        }
-        
-    }
-    
     
 }

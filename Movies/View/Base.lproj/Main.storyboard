@@ -35,19 +35,33 @@
                                             <rect key="frame" x="0.0" y="0.0" width="164" height="143"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Wtt-Rb-Rd0">
+                                                    <rect key="frame" x="0.0" y="0.0" width="164" height="143"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYE-Gu-sKi">
                                                     <rect key="frame" x="61" y="61" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Z4G-hh-q3a">
+                                                    <rect key="frame" x="72" y="61" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="Wtt-Rb-Rd0" firstAttribute="top" secondItem="lc1-rR-75e" secondAttribute="top" id="2FW-ps-TtA"/>
                                             <constraint firstItem="GYE-Gu-sKi" firstAttribute="centerY" secondItem="lc1-rR-75e" secondAttribute="centerY" id="EVW-7Y-LEJ"/>
+                                            <constraint firstItem="Wtt-Rb-Rd0" firstAttribute="leading" secondItem="lc1-rR-75e" secondAttribute="leading" id="Ffq-Z0-U4k"/>
+                                            <constraint firstAttribute="bottom" secondItem="Wtt-Rb-Rd0" secondAttribute="bottom" id="G8Z-Gm-4Gi"/>
                                             <constraint firstItem="GYE-Gu-sKi" firstAttribute="centerX" secondItem="lc1-rR-75e" secondAttribute="centerX" id="mkr-gr-dyL"/>
+                                            <constraint firstAttribute="trailing" secondItem="Wtt-Rb-Rd0" secondAttribute="trailing" id="vTk-Sd-vZJ"/>
+                                            <constraint firstItem="Z4G-hh-q3a" firstAttribute="centerY" secondItem="lc1-rR-75e" secondAttribute="centerY" id="veX-zr-wxD"/>
+                                            <constraint firstItem="Z4G-hh-q3a" firstAttribute="centerX" secondItem="lc1-rR-75e" secondAttribute="centerX" id="wWF-Rz-VY1"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="Z4G-hh-q3a" id="aYn-IG-g5m"/>
+                                            <outlet property="imageViewPoster" destination="Wtt-Rb-Rd0" id="J1v-yv-yUf"/>
                                             <outlet property="labelTitle" destination="GYE-Gu-sKi" id="zCv-q6-IwT"/>
                                         </connections>
                                     </collectionViewCell>

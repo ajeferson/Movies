@@ -9,10 +9,12 @@
 import Foundation
 import RxSwift
 
+typealias Scheduler = ImmediateSchedulerType
+
 struct Schedulers {
     
-    static let io: ImmediateSchedulerType = ConcurrentDispatchQueueScheduler.init(queue: DispatchQueue.global(qos: .utility))
-    static let main: ImmediateSchedulerType = MainScheduler.instance
-    static let current: ImmediateSchedulerType = CurrentThreadScheduler.instance
+    static let io: Scheduler = ConcurrentDispatchQueueScheduler.init(queue: DispatchQueue.global(qos: .utility))
+    static let main: Scheduler = MainScheduler.instance
+    static let current: Scheduler = CurrentThreadScheduler.instance
     
 }

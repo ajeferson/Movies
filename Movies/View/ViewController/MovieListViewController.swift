@@ -62,6 +62,7 @@ class MovieListViewController: BaseViewController, Identifiable {
                 .items(cellIdentifier: MovieListCollectionViewCell.identifier,
                        cellType: MovieListCollectionViewCell.self)) {
                         row, cellViewModel, cell in
+                        cellViewModel.fetchImage()
                         cell.viewModel = cellViewModel
             }
             .disposed(by: disposeBag)

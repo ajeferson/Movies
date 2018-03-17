@@ -13,16 +13,20 @@ import RxSwift
 class MovieService: MovieServiceProtocol {
     
     let basePath = "https://api.themoviedb.org/3"
-    let imagePath = "http://image.tmdb.org/t/p"
+    let imagePath = "https://image.tmdb.org/t/p"
     let apiKey = "1f54bd990f1cdfb230adb312546d765d"
     
-    lazy var upcomingMoviesUrl: String = {
+    // TODO use func
+    func upcomingMoviesUrl: String {
         return "\(basePath)/movie/upcoming"
-    }()
+    }
     
+    func imageUrl(for path: String) -> String {
+        return "\(imagePath)/w185\(path)"
+    }
     
     func upcomingMovies(at page: Int) -> Single<[Movie]> {
-       
+        
         if !Connectivity.isConnected {
             return Single.error(AppError.network)
         }
@@ -36,7 +40,7 @@ class MovieService: MovieServiceProtocol {
             "language": "en"
         ]
         
-        return Single.create(subscribe: { [url = upcomingMoviesUrl] single -> Disposable in
+        return Single.create(subscribe: { [url = upcomingMoviesUrl()] single -> Disposable in
             
             Alamofire.request(url,
                               method: .get,
@@ -66,6 +70,27 @@ class MovieService: MovieServiceProtocol {
             return Disposables.create()
             
         })
+        
+    }
+    
+    func fetchImage(at path: String) -> Single<Data> {
+        
+        return Single.create { [url = imageUrl(for: path) ]single in
+            
+            Alamofire
+                .request(url)
+                .validate()
+                .responseData { (response) in
+                    if let data = response.result.value {
+                        single(.success(data))
+                    } else {
+                        single(.error(response.isNetworkError ? AppError.network : AppError.unknown))
+                    }
+            }
+            
+            return Disposables.create()
+            
+        }
         
     }
     

@@ -7,17 +7,44 @@
 //
 
 import UIKit
+import RxSwift
 
 class MovieListCollectionViewCell: UICollectionViewCell, Identifiable {
     
     static var identifier: String = "MovieListCollectionViewCell"
     
     @IBOutlet weak var labelTitle: UILabel!
+    @IBOutlet weak var imageViewPoster: UIImageView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    var viewModel: MovieListViewModel.MovieListCellViewModel? {
+    var disposeBag = DisposeBag()
+    
+    var viewModel: MovieListCellViewModel? {
         didSet {
             labelTitle.text = viewModel?.title
+            disposeBag = DisposeBag() // Dispose previous disposables
+            bindToIsLoading()
+            subscribeToPosterImage()
         }
+    }
+    
+    private func bindToIsLoading() {
+        viewModel?
+            .isLoading
+            .asObservable()
+            .map { !$0 }
+            .bind(to: activityIndicator.rx.isHidden)
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToPosterImage() {
+        viewModel?
+            .posterImage
+            .asObservable()
+            .subscribe(onNext: { [weak self] image in
+                self?.imageViewPoster.image = image
+            })
+            .disposed(by: disposeBag)
     }
     
 }
