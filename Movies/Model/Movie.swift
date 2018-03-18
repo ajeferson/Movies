@@ -19,7 +19,11 @@ struct Movie: Codable {
     var releaseDateStr: String
     var genreIds: [Int]
     var originalTitle: String
-
+    
+    var releaseDate: Date? {
+        return DateFormatter.api.date(from: releaseDateStr)
+    }
+    
     // JSON representation of a Movie
     // Converting snake_case to CamelCase
     enum CodingKeys: String, CodingKey {

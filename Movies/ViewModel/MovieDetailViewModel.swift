@@ -27,12 +27,20 @@ class MovieDetailViewModel {
     // Expose to the view
     let title: String
     let overview: String
-    let releaseDateStr: String
+    var releaseDateStr: String?
+    
+    var genresString: String {
+        let str = genres.map { $0.name }.joined(separator: ", ")
+        return str.isEmpty ? "" :  "Genre(s): \(str)"
+    }
     
     
     init(movie: Movie, genres: [Genre]?, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movie = movie
         self.genres = genres ?? [Genre]()
+        if let date = movie.releaseDate {
+            releaseDateStr = DateFormatter.default.string(from: date)
+        }
         self.movieService = movieService
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler
@@ -40,7 +48,6 @@ class MovieDetailViewModel {
         // Movie attributes
         title = movie.title
         overview = movie.overview
-        releaseDateStr = movie.releaseDateStr
         
     }
     

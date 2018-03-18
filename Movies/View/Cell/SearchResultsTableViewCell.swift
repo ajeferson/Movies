@@ -11,22 +11,16 @@ import UIKit
 class SearchResultsTableViewCell: UITableViewCell, Identifiable {
 
     @IBOutlet weak var labelTitle: UILabel!
+    @IBOutlet weak var labelReleaseDate: UILabel!
     
     static var identifier: String = "SearchResultsTableViewCell"
     
     var viewModel: SearchResultsCellViewModel? { didSet { updateView() } }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
     private func updateView() {
         labelTitle.text = viewModel?.title
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+        labelReleaseDate.text = viewModel?.releaseDateStr
+        labelReleaseDate.superview?.isVisible = viewModel?.releaseDateStr != nil
     }
 
 }

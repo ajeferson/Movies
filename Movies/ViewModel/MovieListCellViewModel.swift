@@ -12,7 +12,7 @@ import RxSwift
 class MovieListCellViewModel {
     
     let title: String
-    let releaseDateStr: String
+    var releaseDateStr: String?
     let posterPath: String?
     let backdropPath: String?
     let genres: [Genre]
@@ -29,14 +29,19 @@ class MovieListCellViewModel {
     let uiScheduler: Scheduler
     
     init(movie: Movie, genres: [Genre]?, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+        
         title = movie.title
-        releaseDateStr = movie.releaseDateStr
         posterPath = movie.posterPath
         backdropPath = movie.backdropPath
+        if let date = movie.releaseDate {
+            releaseDateStr = DateFormatter.default.string(from: date)
+        }
+        
         self.genres = genres ?? [Genre]()
         self.movieService = movieService
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler
+        
     }
     
     func fetchImage() {

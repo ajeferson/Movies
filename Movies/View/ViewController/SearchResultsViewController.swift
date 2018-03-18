@@ -45,6 +45,7 @@ class SearchResultsViewController: UIViewController, Identifiable, UISearchResul
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
         setupUI()
         subscribe()
     }
@@ -94,23 +95,6 @@ class SearchResultsViewController: UIViewController, Identifiable, UISearchResul
                         row, cellViewModel, cell in
                         cell.viewModel = cellViewModel
             }
-            .disposed(by: disposeBag)
-        
-        tableView
-            .rx
-            .willDisplayCell
-            .subscribe(onNext: { [weak self] cellInfo in
-                let (_, indexPath) = cellInfo
-                self?.willDisplayCell(at: indexPath)
-            })
-            .disposed(by: disposeBag)
-        
-        tableView
-            .rx
-            .modelSelected(SearchResultsCellViewModel.self)
-            .subscribe(onNext: { [weak self] cellViewModel in
-                self?.didSelectMovie()
-            })
             .disposed(by: disposeBag)
         
     }
@@ -188,20 +172,26 @@ class SearchResultsViewController: UIViewController, Identifiable, UISearchResul
         subscribeEventsOf(searchBar: searchController.searchBar)
     }
     
+}
+
+
+//MARK:- TableView
+extension SearchResultsViewController: UITableViewDelegate {
     
-    //MARK:- TableView
-    
-    func willDisplayCell(at indexPath: IndexPath) {
-        if indexPath.row == viewModel.resultsCount - bottomOffset && !viewModel.isSearching  && !viewModel.isDone {
-            viewModel.search(fromFirstPage: false)
-        }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
     }
     
-    func didSelectMovie() {
-        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let movie = viewModel.movie(at: indexPath.row)
         delegate?.showDetailsOf(movie: movie)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == viewModel.resultsCount - bottomOffset && !viewModel.isSearching  && !viewModel.isDone {
+            viewModel.search(fromFirstPage: false)
+        }
     }
     
 }

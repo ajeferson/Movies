@@ -11,9 +11,13 @@ import Foundation
 class SearchResultsCellViewModel {
     
     var title: String
+    var releaseDateStr: String?
     
     init(movie: Movie) {
         title = movie.title
+        if let date = movie.releaseDate {
+            releaseDateStr = DateFormatter.default.string(from: date)
+        }
     }
     
 }

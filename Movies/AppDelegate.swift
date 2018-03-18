@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // The ViewController is considered the actual view on MVVM
         let viewModel = MovieListViewModel(movieService: MovieService(), genreService: GenreService.shared)
         let viewController = MovieListViewController.newInstance(viewModel: viewModel)
-        let nav = UINavigationController(rootViewController: viewController)
+        let nav = DefaultNavigationController(rootViewController: viewController)
         
         nav.navigationBar.prefersLargeTitles = true
         

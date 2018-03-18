@@ -34,10 +34,16 @@ class MovieListViewController: UIViewController, Identifiable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
         setupSearchController()
         subscribe()
         subscribeToCollectionViewWillEvents()
         viewModel.fetchMovies()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.largeTitleDisplayMode = .automatic
     }
     
     
@@ -85,14 +91,6 @@ class MovieListViewController: UIViewController, Identifiable {
             })
             .disposed(by: disposeBag)
         
-        collectionView
-            .rx
-            .modelSelected(MovieListCellViewModel.self)
-            .subscribe(onNext: { cellViewModel in
-                self.didSelectMovie()
-            })
-            .disposed(by: disposeBag)
-        
     }
     
     private func setupSearchController() {
@@ -103,6 +101,10 @@ class MovieListViewController: UIViewController, Identifiable {
         // Setup search controller
         let searchController = UISearchController(searchResultsController: searchResults)
         searchController.searchResultsUpdater = searchResults
+        searchController.searchBar.barStyle = .black
+        
+        let button = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
+        button.tintColor = UIColor.white
         
         searchController.searchBar.placeholder = "Search"
         navigationItem.searchController = searchController
@@ -124,38 +126,64 @@ class MovieListViewController: UIViewController, Identifiable {
         }
     }
     
-    private func didSelectMovie() {
-        
-        // Get the selected index path
-        guard let indexes = collectionView.indexPathsForSelectedItems,
-            let indexPath = indexes.first else {
-                return
-        }
-        
-        // Open the details view controller
-        let detailsViewModel = viewModel.getMovieDetailViewModel(at: indexPath.row)
-        present(detailsViewModel: detailsViewModel)
-        
-    }
-    
     private func present(detailsViewModel: MovieDetailViewModel) {
         let viewController = MovieDetailViewController.newInstance(viewModel: detailsViewModel) // View creates View
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    
+    //MARK:- UI
+    
+    private func setupUI() {
+        collectionView.delegate = self
+        activityIndicator.startAnimating()
     }
     
 }
 
 
 //MARK:- CollectionView Layout
+
 extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     
+    var spacing: CGFloat { return 10 }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return spacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return spacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 100, height: 100)
+        
+        let width: CGFloat = 140
+        let ratio: CGFloat = 1.7
+        
+        return CGSize(width: width, height: width * ratio)
+        
     }
     
 }
 
 
+//MARK:- CollectionView Delegate
+extension MovieListViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let detailsViewModel = viewModel.getMovieDetailViewModel(at: indexPath.row)
+        present(detailsViewModel: detailsViewModel)
+    }
+    
+}
+
+
+//MARK:- SearchResultsDelegate
 extension MovieListViewController: SearchResultsDelegate {
     
     func showDetailsOf(movie: Movie) {
