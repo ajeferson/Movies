@@ -14,7 +14,7 @@ class MovieDetailViewModel {
     private let movie: Movie
     private let genres: [Genre]
     
-    let movieService: MovieServiceProtocol
+    let imageService: ImageServiceProtocol
     
     let backdrop: Variable<UIImage?> = Variable(nil)
     let poster: Variable<UIImage?> = Variable(nil)
@@ -35,13 +35,15 @@ class MovieDetailViewModel {
     }
     
     
-    init(movie: Movie, genres: [Genre]?, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+    init(movie: Movie, genres: [Genre]?, imageService: ImageServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movie = movie
         self.genres = genres ?? [Genre]()
         if let date = movie.releaseDate {
             releaseDateStr = DateFormatter.default.string(from: date)
         }
-        self.movieService = movieService
+        
+        self.imageService = imageService
+        
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler
         
@@ -64,7 +66,7 @@ class MovieDetailViewModel {
     }
     
     private func fetchImage(of size: Sizeable, at path: String, onSuccess: @escaping (UIImage?) -> Void, onError: @escaping ((Error) -> Void)) {
-        movieService
+        imageService
             .fetchImage(of: size, at: path)
             .asObservable()
             .map { UIImage(data: $0) }

@@ -22,7 +22,7 @@ extension BaseServiceProtocol {
         var parameters = Parameters()
         params.forEach { parameters[$0] = $1 }
         parameters["api_key"] = Auth.apiKey.rawValue
-        parameters["language"] = "en-US" // TODO
+        parameters["language"] = "en-US"
         
         return Single<Model>.create { [url] single in
             
@@ -42,7 +42,7 @@ extension BaseServiceProtocol {
                             let results = try decoder.decode(Model.self, from: value)
                             single(.success(results))
                         } catch {
-                            single(.error(AppError.decode))
+                            single(.error(AppError.unknown))
                         }
                         
                     case .failure:

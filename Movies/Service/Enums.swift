@@ -10,9 +10,8 @@ import Foundation
 
 enum AppError: String, Error {
     
-    case network = "Verifique sua conexão com a internet"
-    case unknown = "Ocorreu um erro, tente novamente mais tarde"
-    case decode = "Não possível parsear os dados"
+    case network = "Check your internet connection"
+    case unknown = "An error has occurred, please try again later"
     
 }
 

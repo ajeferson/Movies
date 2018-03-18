@@ -18,7 +18,9 @@ class MovieListViewModel {
     let uiScheduler: Scheduler
     
     var disposeBag = DisposeBag()
+    
     var isLoading = Variable(false)
+    var error: Variable<AppError?> = Variable(nil)
     
     var currentPage = 1
     let pageSize = 20
@@ -57,6 +59,7 @@ class MovieListViewModel {
                 self?.process(movies: movies)
             }) { [weak self] error in
                 self?.isLoading.value = false
+                self?.error.value = error as? AppError
             }
             .disposed(by: disposeBag)
         
@@ -64,11 +67,11 @@ class MovieListViewModel {
     
     // ViewModel creates ViewModel
     func getMovieDetailViewModel(at index: Int) -> MovieDetailViewModel {
-        return MovieDetailViewModel(movie: movies[index], genres: genresOf(movie: movies[index]), movieService: movieService)
+        return MovieDetailViewModel(movie: movies[index], genres: genresOf(movie: movies[index]), imageService: ImageService())
     }
     
     func getMoviewDetailViewModel(`for` movie: Movie) -> MovieDetailViewModel {
-        return MovieDetailViewModel(movie: movie, genres: genresOf(movie: movie), movieService: movieService)
+        return MovieDetailViewModel(movie: movie, genres: genresOf(movie: movie), imageService: ImageService())
     }
     
     func getSearchResultsViewModel() -> SearchResultsViewModel {
@@ -85,7 +88,7 @@ class MovieListViewModel {
         self.movies.append(contentsOf: movies)
         
         let cells = movies.map { [weak self] movie -> MovieListCellViewModel in
-            return MovieListCellViewModel(movie: movie, genres: self?.genresOf(movie: movie), movieService: movieService)
+            return MovieListCellViewModel(movie: movie, genres: self?.genresOf(movie: movie), imageService: ImageService())
         }
         
         viewModelCells.value.append(contentsOf: cells)

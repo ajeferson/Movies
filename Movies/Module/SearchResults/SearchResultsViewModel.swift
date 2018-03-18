@@ -24,8 +24,9 @@ class SearchResultsViewModel {
     var pageSize = 20
     
     var isLoading: Variable<Bool?> = Variable(nil)
-    var emptyResults = Variable(false)
     var error: Variable<AppError?> = Variable(nil)
+    
+    var emptyResults = Variable(false)
     var viewModelCells: Variable<[SearchResultsCellViewModel]> = Variable([])
     
     var disposeBag = DisposeBag()

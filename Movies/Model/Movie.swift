@@ -50,3 +50,7 @@ struct Movie: Codable {
     }
     
 }
+
+struct MovieResults: Codable {
+    let results: [Movie]?
+}

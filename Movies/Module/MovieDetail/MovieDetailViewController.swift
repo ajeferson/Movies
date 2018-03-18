@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-class MovieDetailViewController: UITableViewController, Identifiable {
+class MovieDetailViewController: UITableViewController, Identifiable, View {
     
     static var identifier: String = "MovieDetailViewController"
     
@@ -35,11 +35,52 @@ class MovieDetailViewController: UITableViewController, Identifiable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        initView()
         updateView()
+        initViewModel()
+    }
+    
+    func initView() {
+        navigationItem.largeTitleDisplayMode = .never
+        tableView.tableFooterView = UIView()
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 200
+    }
+    
+    func initViewModel() {
         bindImages()
         viewModel.fetchImages()
     }
+    
+    private func updateView() {
+        labelTitle.text = viewModel.title
+        labelReleaseDate.text = viewModel.releaseDateStr
+        labelOverview.text = viewModel.overview
+        labelGenres.text = viewModel.genresString
+    }
+    
+}
+
+
+
+//MARK:- TableView
+extension MovieDetailViewController {
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y <= 0 {
+            headerTopConstraint.constant = scrollView.contentOffset.y
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+}
+
+
+//MARK:- ViewModel Subscriptions
+extension MovieDetailViewController {
     
     private func bindImages() {
         
@@ -55,30 +96,6 @@ class MovieDetailViewController: UITableViewController, Identifiable {
             .bind(to: imageViewPoster.rx.image)
             .disposed(by: disposeBag)
         
-    }
-    
-    private func updateView() {
-        labelTitle.text = viewModel.title
-        labelReleaseDate.text = viewModel.releaseDateStr
-        labelOverview.text = viewModel.overview
-        labelGenres.text = viewModel.genresString
-    }
-    
-    private func setupUI() {
-        navigationItem.largeTitleDisplayMode = .never
-        tableView.tableFooterView = UIView()
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 200
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= 0 {
-            headerTopConstraint.constant = scrollView.contentOffset.y
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
     }
     
 }

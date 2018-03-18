@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchResultsTableViewCell: UITableViewCell, Identifiable {
+class SearchResultsTableViewCell: UITableViewCell, Identifiable, View {
 
     @IBOutlet weak var labelTitle: UILabel!
     @IBOutlet weak var labelReleaseDate: UILabel!

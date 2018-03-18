@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchResultsViewController: UIViewController, Identifiable, UISearchResultsUpdating {
+class SearchResultsViewController: UIViewController, Identifiable, View, UISearchResultsUpdating {
     
     static var identifier: String = "SearchResultsViewController"
     
@@ -45,23 +45,57 @@ class SearchResultsViewController: UIViewController, Identifiable, UISearchResul
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        setupUI()
-        subscribe()
+        initView()
+        initViewModel()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    func initView() {
+        tableView.delegate = self
+        addEmptyResultsLabel()
+        tableView.tableFooterView = UIView()
+        activityIndicator.startAnimating()
+    }
     
-    //MARK:- Subscribe
-    
-    private func subscribe() {
+    func initViewModel() {
         subscribeToIsLoading()
         bindToEmptyResults()
         bindToTableView()
     }
+    
+    private func addEmptyResultsLabel() {
+        
+        emptyLabel = UILabel(frame: CGRect.zero)
+        emptyLabel.text = "Nenhum resultado"
+        emptyLabel.sizeToFit()
+        emptyLabel.font = UIFont.appFont(withStyle: .medium)
+        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        tableView.addSubview(emptyLabel)
+        
+        emptyLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
+        emptyLabel.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 40).isActive = true
+        
+    }
+    
+    
+    //MARK:- SearchController
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        // Subscribes only once
+        guard !subscribedToSearchBar else { return }
+        subscribedToSearchBar = true
+        subscribeEventsOf(searchBar: searchController.searchBar)
+    }
+    
+}
+
+
+//MARK:- ViewModel Subscriptions
+extension SearchResultsViewController {
     
     private func subscribeToIsLoading() {
         viewModel
@@ -70,6 +104,17 @@ class SearchResultsViewController: UIViewController, Identifiable, UISearchResul
             .subscribe(onNext: { [weak self] isLoading in
                 self?.activityIndicator.isVisible = isLoading ?? false
                 self?.tableView.isHidden = isLoading ?? true
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToError() {
+        viewModel
+            .error
+            .asObservable()
+            .subscribe(onNext: { [weak self] error in
+                guard let error = error else { return }
+                self?.presentErrorAlert(withError: error)
             })
             .disposed(by: disposeBag)
     }
@@ -137,39 +182,6 @@ class SearchResultsViewController: UIViewController, Identifiable, UISearchResul
             })
             .disposed(by: disposeBag)
         
-    }
-    
-    
-    //MARK:- UI
-    
-    private func setupUI() {
-        addEmptyResultsLabel()
-        tableView.tableFooterView = UIView()
-        activityIndicator.startAnimating()
-    }
-    
-    private func addEmptyResultsLabel() {
-        
-        emptyLabel = UILabel(frame: CGRect.zero)
-        emptyLabel.text = "Nenhum resultado"
-        emptyLabel.sizeToFit()
-        emptyLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        tableView.addSubview(emptyLabel)
-        
-        emptyLabel.centerXAnchor.constraint(equalTo: tableView.centerXAnchor).isActive = true
-        emptyLabel.topAnchor.constraint(equalTo: tableView.topAnchor, constant: 40).isActive = true
-        
-    }
-    
-    
-    //MARK:- SearchController
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        // Subscribes only once
-        guard !subscribedToSearchBar else { return }
-        subscribedToSearchBar = true
-        subscribeEventsOf(searchBar: searchController.searchBar)
     }
     
 }

@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class MovieListViewController: UIViewController, Identifiable {
+class MovieListViewController: UIViewController, Identifiable, View {
     
     static var identifier: String = "MovieListViewController"
     
@@ -23,6 +23,7 @@ class MovieListViewController: UIViewController, Identifiable {
     let disposeBag = DisposeBag()
     var viewModel: MovieListViewModel!
     
+    
     static func newInstance(viewModel: MovieListViewModel) -> MovieListViewController {
         let instance = storyboard.instantiateViewController(withIdentifier: MovieListViewController.identifier) as! MovieListViewController
         instance.viewModel = viewModel
@@ -34,11 +35,8 @@ class MovieListViewController: UIViewController, Identifiable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupSearchController()
-        subscribe()
-        subscribeToCollectionViewWillEvents()
-        viewModel.fetchMovies()
+        initView()
+        initViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,70 +44,21 @@ class MovieListViewController: UIViewController, Identifiable {
         navigationItem.largeTitleDisplayMode = .automatic
     }
     
+    func initView() {
+        
+        collectionView.delegate = self
+        activityIndicator.startAnimating()
+        
+        setupSearchController()
+        
+    }
     
-    //MARK:- Rx
-    
-    // Bind view model attributes to UI controls and make subscriptions
-    private func subscribe() {
+    func initViewModel() {
         subscribeToIsLoading()
+        subscribeToError()
         bindViewModelCellsToCollectionView()
-    }
-    
-    private func subscribeToIsLoading() {
-        viewModel
-            .isLoading
-            .asObservable()
-            .subscribe(onNext: { [weak self] isLoading in
-                self?.loadingStateChange(to: isLoading)
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func bindViewModelCellsToCollectionView() {
-        viewModel
-            .viewModelCells
-            .asObservable()
-            .bind(to: collectionView
-                .rx
-                .items(cellIdentifier: MovieListCollectionViewCell.identifier,
-                       cellType: MovieListCollectionViewCell.self)) {
-                        row, cellViewModel, cell in
-                        cellViewModel.fetchImage()
-                        cell.viewModel = cellViewModel
-            }
-            .disposed(by: disposeBag)
-    }
-    
-    private func subscribeToCollectionViewWillEvents() {
-        
-        collectionView
-            .rx
-            .willDisplayCell
-            .subscribe(onNext: { [weak self] cellInfo in
-                let (_, indexPath) = cellInfo
-                self?.willDisplayCell(at: indexPath)
-            })
-            .disposed(by: disposeBag)
-        
-    }
-    
-    private func setupSearchController() {
-        
-        let searchResultsViewModel = viewModel.getSearchResultsViewModel()
-        let searchResults = SearchResultsViewController.newInstance(viewModel: searchResultsViewModel, delegate: self)
-        
-        // Setup search controller
-        let searchController = UISearchController(searchResultsController: searchResults)
-        searchController.searchResultsUpdater = searchResults
-        searchController.searchBar.barStyle = .black
-        
-        let button = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
-        button.tintColor = UIColor.white
-        
-        searchController.searchBar.placeholder = "Search"
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
-        
+        subscribeToCollectionViewWillEvents()
+        viewModel.fetchMovies()
     }
     
     
@@ -131,12 +80,23 @@ class MovieListViewController: UIViewController, Identifiable {
         navigationController?.pushViewController(viewController, animated: true)
     }
     
-    
-    //MARK:- UI
-    
-    private func setupUI() {
-        collectionView.delegate = self
-        activityIndicator.startAnimating()
+    private func setupSearchController() {
+        
+        let searchResultsViewModel = viewModel.getSearchResultsViewModel()
+        let searchResults = SearchResultsViewController.newInstance(viewModel: searchResultsViewModel, delegate: self)
+        
+        // Setup search controller
+        let searchController = UISearchController(searchResultsController: searchResults)
+        searchController.searchResultsUpdater = searchResults
+        searchController.searchBar.barStyle = .black
+        
+        let button = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
+        button.tintColor = UIColor.white
+        
+        searchController.searchBar.placeholder = "Search"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        
     }
     
 }
@@ -161,12 +121,63 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         let width: CGFloat = 140
         let ratio: CGFloat = 1.7
-        
-        return CGSize(width: width, height: width * ratio)
-        
+        return CGSize(width: width, height: width * ratio) // Looks good in portrait and landscape
+    }
+    
+}
+
+
+
+//MARK:- ViewModel Subscriptions
+extension MovieListViewController {
+    
+    private func subscribeToIsLoading() {
+        viewModel
+            .isLoading
+            .asObservable()
+            .subscribe(onNext: { [weak self] isLoading in
+                self?.loadingStateChange(to: isLoading)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToError() {
+        viewModel
+            .error
+            .asObservable()
+            .subscribe(onNext: { [weak self] error in
+                guard let error = error else { return }
+                self?.presentErrorAlert(withError: error)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindViewModelCellsToCollectionView() {
+        viewModel
+            .viewModelCells
+            .asObservable()
+            .bind(to: collectionView
+                .rx
+                .items(cellIdentifier: MovieListCollectionViewCell.identifier,
+                       cellType: MovieListCollectionViewCell.self)) {
+                        row, cellViewModel, cell in
+                        cellViewModel.fetchImage()
+                        cell.viewModel = cellViewModel
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToCollectionViewWillEvents() {
+        collectionView
+            .rx
+            .willDisplayCell
+            .subscribe(onNext: { [weak self] cellInfo in
+                let (_, indexPath) = cellInfo
+                self?.willDisplayCell(at: indexPath)
+            })
+            .disposed(by: disposeBag)
     }
     
 }

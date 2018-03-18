@@ -10,6 +10,11 @@ import Foundation
 import RxSwift
 import Alamofire
 
+protocol GenreServiceProtocol {
+    func fetchGenres() -> Single<[Genre]>
+    func genresOf(movie: Movie) -> [Genre]?
+}
+
 class GenreService: BaseServiceProtocol, GenreServiceProtocol {
     
     typealias Model = GenreResults

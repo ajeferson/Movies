@@ -17,7 +17,7 @@ class MovieListCellViewModel {
     let backdropPath: String?
     let genres: [Genre]
     
-    let movieService: MovieServiceProtocol
+    let imageService: ImageServiceProtocol
     
     let disposeBag = DisposeBag()
     
@@ -28,7 +28,7 @@ class MovieListCellViewModel {
     let ioScheduler: Scheduler
     let uiScheduler: Scheduler
     
-    init(movie: Movie, genres: [Genre]?, movieService: MovieServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+    init(movie: Movie, genres: [Genre]?, imageService: ImageServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         
         title = movie.title
         posterPath = movie.posterPath
@@ -37,8 +37,10 @@ class MovieListCellViewModel {
             releaseDateStr = DateFormatter.default.string(from: date)
         }
         
+        self.imageService = imageService
+        
         self.genres = genres ?? [Genre]()
-        self.movieService = movieService
+        
         self.ioScheduler = ioScheduler
         self.uiScheduler = uiScheduler
         
@@ -54,7 +56,7 @@ class MovieListCellViewModel {
         // Will fetch
         isLoading.value = true
         
-        movieService
+        imageService
             .fetchImage(of: PosterSize.w500, at: path)
             .subscribeOn(ioScheduler)
             .observeOn(uiScheduler)
