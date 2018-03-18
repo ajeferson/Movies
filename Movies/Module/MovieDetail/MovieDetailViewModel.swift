@@ -54,15 +54,20 @@ class MovieDetailViewModel {
     }
     
     func fetchImages() {
-        
-        // Movie does not have a backdrop
-        guard let path = movie.backdropPath else { return }
-        fetchImage(of: BackdropSize.w780, at: path, onSuccess: { [weak self] in self?.backdrop.value = $0 }, onError: { _ in })
-
+        fetchPoster()
+        fetchBackdrop()
+    }
+    
+    func fetchPoster() {
         // Movie does not have a backdrop
         guard let posterPath = movie.posterPath else { return }
         fetchImage(of: PosterSize.w500, at: posterPath, onSuccess: { [weak self] in self?.poster.value = $0 }, onError: { _ in })
-        
+    }
+    
+    func fetchBackdrop() {
+        // Movie does not have a backdrop
+        guard let path = movie.backdropPath else { return }
+        fetchImage(of: BackdropSize.w780, at: path, onSuccess: { [weak self] in self?.backdrop.value = $0 }, onError: { _ in })
     }
     
     private func fetchImage(of size: Sizeable, at path: String, onSuccess: @escaping (UIImage?) -> Void, onError: @escaping ((Error) -> Void)) {

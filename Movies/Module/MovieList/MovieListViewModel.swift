@@ -12,7 +12,7 @@ import RxSwift
 class MovieListViewModel {
     
     let movieService: MovieServiceProtocol
-    let genreService: GenreService
+    let genreService: GenreServiceProtocol
     
     let ioScheduler: Scheduler
     let uiScheduler: Scheduler
@@ -38,7 +38,7 @@ class MovieListViewModel {
     
     var isDone = false
     
-    init(movieService: MovieServiceProtocol, genreService: GenreService, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
+    init(movieService: MovieServiceProtocol, genreService: GenreServiceProtocol, ioScheduler: Scheduler = Schedulers.io, uiScheduler: Scheduler = Schedulers.main) {
         self.movieService = movieService
         self.genreService = genreService
         self.ioScheduler = ioScheduler

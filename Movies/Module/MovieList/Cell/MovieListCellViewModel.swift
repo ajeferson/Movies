@@ -23,6 +23,7 @@ class MovieListCellViewModel {
     
     // Expose to the View, so it knows about the image fetching
     let isLoading = Variable(false)
+    let error: Variable<AppError?> = Variable(nil)
     let posterImage: Variable<UIImage?> = Variable(nil)
     
     let ioScheduler: Scheduler
@@ -68,6 +69,7 @@ class MovieListCellViewModel {
             }) { [weak self] error in
                 
                 self?.isLoading.value = false
+                self?.error.value = error as? AppError
                 
             }
             .disposed(by: disposeBag)
